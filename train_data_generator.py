@@ -70,7 +70,7 @@ def dump_to_file(data: list[str], f) -> None:
 
 
 def main():
-    with open("./train_data/train_data.json", "w") as f:
+    with open("./train_data/train_data.jsonl", "w") as f:
         # json.dump(read_chat_log(), f, ensure_ascii=False)
         dump_to_file(convert_to_fine_tuning_data(read_chat_log()), f)
 

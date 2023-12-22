@@ -13,3 +13,7 @@ run:
 .PHONY: generate_dataset
 generate_dataset:
 	poetry run python -m train_data_generator
+
+.PHONY: validate_format
+validate_format:
+	poetry run python -m validate_format
