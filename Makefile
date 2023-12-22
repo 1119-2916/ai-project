@@ -9,3 +9,7 @@ install:
 .PHONY: run
 run:
 	poetry run python -m discord_bot
+
+.PHONY: generate_dataset
+generate_dataset:
+	poetry run python -m train_data_generator

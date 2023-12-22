@@ -1,4 +1,5 @@
 /private/*
+/.vscode/*
 !/private/.gitkeep
 __pycache__/
 poetry.lock
