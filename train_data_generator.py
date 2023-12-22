@@ -27,6 +27,7 @@ def extract_message(data: list[tuple[str, str]]) -> list[str]:
         # url を含まない black_99rose の発言を抽出する
         if author == "black_99rose" and "http" not in message:
             message = message.replace("\n", " ").replace("　", " ")
+            message = message.replace("\\", "＼").replace("/", "／")
             message = remove_parenthesis(message)
             if is_noise(message):
                 continue

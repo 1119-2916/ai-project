@@ -17,3 +17,11 @@ generate_dataset:
 .PHONY: validate_format
 validate_format:
 	poetry run python -m validate_format
+
+.PHONY: upload
+upload:
+	poetry run python -m openai_setup upload
+
+.PHONY: tuning
+tuning:
+	poetry run python -m openai_setup tuning
