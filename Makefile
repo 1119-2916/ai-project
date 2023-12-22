@@ -8,4 +8,4 @@ install:
 
 .PHONY: run
 run:
-	poetry run python -m bot
+	poetry run python -m discord_bot
