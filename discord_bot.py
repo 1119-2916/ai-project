@@ -43,15 +43,15 @@ async def on_message(message):
 
 # 全てのテキストチャンネルに投稿されたメッセージを収拾する
 async def crawl():
-    result: list[tuple[str, str]] = []
     for channel in client.get_all_channels():
         logger.info(f"Channel: {channel.name}")
+        result: list[tuple[str, str]] = []
         if channel.type == discord.ChannelType.text:
             logger.info(f"TextChannel: {channel.name}")
             async for message in channel.history(limit=None):
-                result.insert(0, (message.author.name, message.content))
-    with open("result.txt", "w") as f:
-        json.dump(result, f)
+                result.append((message.author.name, message.content))
+            with open(f"./chat_log/{channel.name}.txt", "w") as f:
+                json.dump(result, f, ensure_ascii=False)
 
 
 def main():
