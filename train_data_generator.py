@@ -16,6 +16,11 @@ def remove_parenthesis(data: str) -> str:
     return re.sub(pattern, "", data)
 
 
+def is_noise(data: str) -> bool:
+    pattern = r"^[\w\?\!\.\:\s]*$"
+    return re.match(pattern, data) is not None
+
+
 def extract_message(data: list[tuple[str, str]]) -> list[str]:
     result: list[str] = []
     for author, message in data:
@@ -23,7 +28,9 @@ def extract_message(data: list[tuple[str, str]]) -> list[str]:
         if author == "black_99rose" and "http" not in message:
             message = message.replace("\n", " ").replace("　", " ")
             message = remove_parenthesis(message)
-            if len(message) == 1:
+            if is_noise(message):
+                continue
+            if len(message) <= 1:
                 continue
             result.append(message)
     return result
@@ -46,9 +53,26 @@ def read_chat_log() -> list[str]:
     return result
 
 
+# fine-tuning 用の形式にデータを変換する
+def convert_to_fine_tuning_data(data: list[str]) -> list[str]:
+    result: list[str] = []
+    no_user = True
+    for i in data:
+        if no_user:
+            result.append('{"messages": [{"role": "assistant", "content": "' + i + '"}]}')
+        else:
+            result.append('{"messages": [{"role": "user", "content": ""}, {"role": "assistant", "content": "' + i + '"}]}')
+    return result
+
+
+def dump_to_file(data: list[str], f) -> None:
+    print(*data, sep="\n", file=f)
+
+
 def main():
     with open("./train_data/train_data.json", "w") as f:
-        json.dump(read_chat_log(), f, ensure_ascii=False)
+        # json.dump(read_chat_log(), f, ensure_ascii=False)
+        dump_to_file(convert_to_fine_tuning_data(read_chat_log()), f)
 
 
 if __name__ == "__main__":
