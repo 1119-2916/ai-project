@@ -1,4 +1,4 @@
-from secrets import DISCORD_BOT_TOKEN
+from private.secrets import DISCORD_BOT_TOKEN
 import discord
 import random
 
