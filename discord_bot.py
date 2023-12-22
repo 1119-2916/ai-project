@@ -1,6 +1,16 @@
 from private.secrets import DISCORD_BOT_TOKEN
+from logging import getLogger, INFO, DEBUG
+import logging
 import discord
 import random
+import json
+
+
+# ロガーの設定
+logging.basicConfig(level=INFO)
+
+logger = getLogger(__name__)
+logger.setLevel(DEBUG)
 
 
 intents = discord.Intents.default()
@@ -10,7 +20,8 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-    print(f"{client.user} has connected to Discord!")
+    logger.info(f"{client.user} has connected to Discord!")
+    await crawl()
 
 
 @client.event
@@ -19,15 +30,28 @@ async def on_message(message):
         message.author == client.user
         or message.mention_everyone
     ):
-        print(f"{message.author} sent a ignored message: {message.content}")
+        logger.info(f"{message.author} sent a ignored message: {message.content}")
         return
 
     random_number = random.randint(1, 100)
     if client.user in message.mentions or random_number < 10:
-        print(f"{message.author} sent a action required message: {message.content}")
+        logger.info(f"{message.author} sent a action required message: {message.content}")
         await message.channel.send(f"Hello {message.author}!")
     else:
-        print(f"{message.author} sent a passed message: {message.content}")
+        logger.info(f"{message.author} sent a passed message: {message.content}")
+
+
+# 全てのテキストチャンネルに投稿されたメッセージを収拾する
+async def crawl():
+    result: list[tuple[str, str]] = []
+    for channel in client.get_all_channels():
+        logger.info(f"Channel: {channel.name}")
+        if channel.type == discord.ChannelType.text:
+            logger.info(f"TextChannel: {channel.name}")
+            async for message in channel.history(limit=None):
+                result.insert(0, (message.author.name, message.content))
+    with open("result.txt", "w") as f:
+        json.dump(result, f)
 
 
 def main():
