@@ -1,5 +1,7 @@
 from private.secrets import DISCORD_BOT_TOKEN
 from logging import getLogger, INFO, DEBUG
+from kurobara_ai import KurobaraAI
+from urlextract import URLExtract
 import logging
 import discord
 import random
@@ -17,6 +19,9 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
+kurobara_ai = KurobaraAI()
+url_extractor = URLExtract()
+
 
 @client.event
 async def on_ready():
@@ -25,19 +30,52 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    # 返事をしない場合は何もしない
+    if not _is_reply(message):
+        return
+
+    # メッセージに画像が含まれる場合は、ルールベースで返事をする
+    if len(message.attachments) > 0:
+        content_type: str = message.attachments[0].content_type
+        if content_type.startswith("image"):
+            logger.info(f"{message.author} sent a image: {message.attachments[0].url}")
+            await message.channel.send(kurobara_ai.generate_reply_to_including_image(message.content))
+            return
+        else:
+            logger.info(f"{message.author} sent a {content_type}")
+            return
+
+    # メッセージにURLが含まれる場合は、ルールベースで返事をする
+    urls: list[str] = url_extractor.find_urls(message.content)
+    if len(urls) > 0:
+        logger.info(f"{message.author} sent a URL: {urls[0]}")
+        text = message.content
+        for url in urls:
+            text = text.replace(url, "")
+        await message.channel.send(kurobara_ai.generate_reply_to_including_URL(text))
+        return
+
+    # 返事をする
+    reply = kurobara_ai.generate_reply(message.content)
+    logger.info(f"{message.author} sent a message: {message.content}, response: {reply}")
+    await message.channel.send(reply)
+
+
+# 返事をするか判断する
+def _is_reply(message) -> bool:
+    # 自分自身の投稿と、@everyoneへのメンションは無視する
     if (
         message.author == client.user
         or message.mention_everyone
     ):
-        logger.info(f"{message.author} sent a ignored message: {message.content}")
-        return
+        return False
 
-    random_number = random.randint(1, 100)
-    if client.user in message.mentions or random_number < 10:
-        logger.info(f"{message.author} sent a action required message: {message.content}")
-        await message.channel.send(f"Hello {message.author}!")
-    else:
-        logger.info(f"{message.author} sent a passed message: {message.content}")
+    # メンションには絶対に反応する
+    if client.user in message.mentions:
+        return True
+
+    # 40% の確率で返事をする
+    return random.randint(1, 100) < 40
 
 
 # 全てのテキストチャンネルに投稿されたメッセージを収拾する
