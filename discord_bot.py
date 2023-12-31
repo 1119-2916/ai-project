@@ -21,7 +21,6 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
     logger.info(f"{client.user} has connected to Discord!")
-    await crawl()
 
 
 @client.event
