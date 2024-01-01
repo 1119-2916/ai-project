@@ -59,6 +59,9 @@ async def on_message(message):
     # 返事をする
     reply = kurobara_ai.generate_reply(message.content)
     logger.info(f"{message.author} sent a message: {message.content}, response: {reply}")
+
+    if len(reply) == 0:
+        return
     await message.channel.send(reply)
 
 
