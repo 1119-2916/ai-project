@@ -1,4 +1,4 @@
-from private.secrets import DISCORD_BOT_TOKEN
+from private.secrets import DISCORD_BOT_TOKEN, VC_CHANNEL_DICT
 from logging import getLogger, INFO, DEBUG
 from kurobara_ai import KurobaraAI
 from urlextract import URLExtract
@@ -31,11 +31,12 @@ async def on_ready():
 @client.event
 async def on_message(message):
     # 返事をしない場合は何もしない
-    if not _is_reply(message):
+    rate: int = VC_CHANNEL_DICT.get(str(message.channel.id), 40)
+    if not _is_reply(message, rate):
         return
 
-    # メッセージに画像が含まれる場合は、ルールベースで返事をする
-    if len(message.attachments) > 0:
+    # メンションであって、メッセージに画像が含まれる場合は、ルールベースで返事をする
+    if len(message.attachments) > 0 and client.user in message.mentions:
         content_type: str = message.attachments[0].content_type
         if content_type.startswith("image"):
             logger.info(f"{message.author} sent a image: {message.attachments[0].url}")
@@ -45,9 +46,9 @@ async def on_message(message):
             logger.info(f"{message.author} sent a {content_type}")
             return
 
-    # メッセージにURLが含まれる場合は、ルールベースで返事をする
+    # メンションであって、メッセージにURLが含まれる場合は、ルールベースで返事をする
     urls: list[str] = url_extractor.find_urls(message.content)
-    if len(urls) > 0:
+    if len(urls) > 0 and client.user in message.mentions:
         logger.info(f"{message.author} sent a URL: {urls[0]}")
         text = message.content
         for url in urls:
@@ -62,7 +63,7 @@ async def on_message(message):
 
 
 # 返事をするか判断する
-def _is_reply(message) -> bool:
+def _is_reply(message, rate: int = 40) -> bool:
     # 自分自身の投稿と、@everyoneへのメンションは無視する
     if (
         message.author == client.user
@@ -75,7 +76,7 @@ def _is_reply(message) -> bool:
         return True
 
     # 40% の確率で返事をする
-    return random.randint(1, 100) < 40
+    return random.randint(1, 100) < rate
 
 
 # 全てのテキストチャンネルに投稿されたメッセージを収拾する
