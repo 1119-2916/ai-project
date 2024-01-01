@@ -1,4 +1,4 @@
-from private.secrets import DISCORD_BOT_TOKEN, VC_CHANNEL_DICT
+from private.secrets import DISCORD_BOT_TOKEN, VC_CHANNEL_DICT, BOT_ID
 from logging import getLogger, INFO, DEBUG
 from kurobara_ai import KurobaraAI
 from urlextract import URLExtract
@@ -35,30 +35,41 @@ async def on_message(message):
     if not _is_reply(message, rate):
         return
 
-    # メンションであって、メッセージに画像が含まれる場合は、ルールベースで返事をする
-    if len(message.attachments) > 0 and client.user in message.mentions:
+    # メンションであった場合、メンション文字列が混ざるのでこれは削除する
+    chat_text: str = message.content.replace(BOT_ID, "")
+
+    # メッセージに画像が含まれる場合
+    if len(message.attachments) > 0:
+        # メンションでなければ無視
+        if not client.user in message.mentions:
+            return
         content_type: str = message.attachments[0].content_type
         if content_type.startswith("image"):
             logger.info(f"{message.author} sent a image: {message.attachments[0].url}")
-            await message.channel.send(kurobara_ai.generate_reply_to_including_image(message.content))
+            logger.info(f"reply to {chat_text}")
+            await message.channel.send(kurobara_ai.generate_reply_to_including_image(chat_text))
             return
         else:
+            # 画像以外は無視
             logger.info(f"{message.author} sent a {content_type}")
             return
 
-    # メンションであって、メッセージにURLが含まれる場合は、ルールベースで返事をする
-    urls: list[str] = url_extractor.find_urls(message.content)
-    if len(urls) > 0 and client.user in message.mentions:
+    # メッセージにURLが含まれる場合
+    urls: list[str] = url_extractor.find_urls(chat_text)
+    if len(urls) > 0:
+        # メンションでなければ無視
+        if not client.user in message.mentions:
+            return
         logger.info(f"{message.author} sent a URL: {urls[0]}")
-        text = message.content
         for url in urls:
-            text = text.replace(url, "")
-        await message.channel.send(kurobara_ai.generate_reply_to_including_URL(text))
+            chat_text = chat_text.replace(url, "")
+        logger.info(f"reply to {chat_text}")
+        await message.channel.send(kurobara_ai.generate_reply_to_including_URL(chat_text))
         return
 
     # 返事をする
-    reply = kurobara_ai.generate_reply(message.content)
-    logger.info(f"{message.author} sent a message: {message.content}, response: {reply}")
+    reply = kurobara_ai.generate_reply(chat_text)
+    logger.info(f"{message.author} sent a message: {chat_text}, response: {reply}")
 
     if len(reply) == 0:
         return
