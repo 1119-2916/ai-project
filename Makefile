@@ -25,3 +25,4 @@ upload:
 .PHONY: tuning
 tuning:
 	poetry run python -m openai_setup tuning
+
