@@ -18,6 +18,9 @@ def cleanse(text: str) -> str:
     ret = re.sub(r'\\n', '　', ret)
     ret = re.sub(r'\\"', "'", ret)
 
+    # バックスラッシュは jsonl だとフォーマットエラーになるので消す
+    ret = re.sub(r'\\', "＼", ret)
+
     # 先頭の空白を全て消す
     ret = re.sub(r'"[\s　]+', '"', ret)
     return ret[1:-1] + "\n"

@@ -7,7 +7,10 @@ client = OpenAI(api_key=OPENAI_API_SECRET)
 
 
 def upload_training_data():
-    train_data_path = "./train_data/train_data.jsonl"
+    # discord のほう
+    # train_data_path = "./train_data/train_data.jsonl"
+    # twitter のほう
+    train_data_path = "./train_data/twitter_11192916.jsonl"
     client.files.create(file=open(train_data_path, "rb"), purpose="fine-tune")
 
 

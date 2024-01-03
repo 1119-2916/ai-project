@@ -54,6 +54,14 @@ def read_chat_log() -> list[str]:
     return result
 
 
+def read_twitter_log() -> list[str]:
+    result: list[str] = []
+    with open("./twitter/output.txt", encoding="utf-8") as f:
+        for line in f:
+            result.append(line.replace("\n", ""))
+    return result
+
+
 # fine-tuning 用の形式にデータを変換する
 def convert_to_fine_tuning_data(data: list[str]) -> list[str]:
     result: list[str] = []
@@ -71,9 +79,18 @@ def dump_to_file(data: list[str], f) -> None:
 
 
 def main():
-    with open("./train_data/train_data.jsonl", "w") as f:
+    # discord のほう
+    # train_data_path = "./train_data/train_data.jsonl"
+
+    # twitter のほう
+    train_data_path = "./train_data/twitter_11192916.jsonl"
+    with open(train_data_path, "w") as f:
         # json.dump(read_chat_log(), f, ensure_ascii=False)
-        dump_to_file(convert_to_fine_tuning_data(read_chat_log()), f)
+        # discord から読むほう
+        # dump_to_file(convert_to_fine_tuning_data(read_chat_log()), f)
+
+        # twitter のログを読むほう
+        dump_to_file(convert_to_fine_tuning_data(read_twitter_log()), f)
 
 
 if __name__ == "__main__":
