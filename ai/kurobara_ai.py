@@ -1,8 +1,9 @@
 import random
 from openai import OpenAI
-from private.secrets import OPENAI_API_SECRET, MODEL_ID
+from private.secrets import OPENAI_API_SECRET, MODEL_ID, BOT_ID
+from .ai_client import AIClient
 
-class KurobaraAI:
+class KurobaraAI(AIClient):
     prompt: str = """
 下記に説明する人物として、短い返答をせよ。
 27歳の独身男性。
@@ -13,8 +14,14 @@ class KurobaraAI:
 口は悪いが、心は優しい。
 返事は短文で、長文は苦手。
 """
+
+    @property
+    def bot_id(self) -> str:
+        return BOT_ID["kurobara"]
+
     def __init__(self):
         self.client = OpenAI(api_key=OPENAI_API_SECRET)
+
 
     # 二重リストからランダムに文字列を生成する
     def _random_selector(self, pattern: list[list[str]]) -> str:
@@ -30,7 +37,7 @@ class KurobaraAI:
             return ""
         else:
             completion = self.client.chat.completions.create(
-                model=MODEL_ID,
+                model=MODEL_ID["kurobara"],
                 messages=[
                     {"role": "system", "content": self.prompt},
                     {"role": "user", "content": message}
@@ -120,5 +127,3 @@ class KurobaraAI:
             return single + after
         else:
             return reply + after
-
-

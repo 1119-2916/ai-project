@@ -6,9 +6,13 @@ requirements:
 install:
 	poetry install
 
-.PHONY: run
-run:
-	poetry run python -m discord_bot
+.PHONY: run_kurobara
+run_kurobara:
+	poetry run python -m discord_bot kurobara
+
+.PHONY: run_ikeda
+run_ikeda:
+	poetry run python -m discord_bot ikeda
 
 .PHONY: generate_dataset
 generate_dataset:
