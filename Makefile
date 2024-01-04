@@ -6,6 +6,11 @@ requirements:
 install:
 	poetry install
 
+# ex) make run KEY=meu
+.PHONY: run
+run:
+	poetry run python -m discord_bot $(KEY)
+
 .PHONY: run_kurobara
 run_kurobara:
 	poetry run python -m discord_bot kurobara

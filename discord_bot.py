@@ -94,6 +94,10 @@ def _is_reply(message, rate: int = 40) -> bool:
     if discord_client.user in message.mentions:
         return True
 
+    # メンションであって、自分が含まれていない場合は無視する
+    if len(message.mentions) > 0 and discord_client.user not in message.mentions:
+        return False
+
     # 40% の確率で返事をする
     return random.randint(1, 100) < rate
 
