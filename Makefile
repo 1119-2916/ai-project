@@ -22,11 +22,12 @@ generate_dataset:
 validate_format:
 	poetry run python -m validate_format
 
+# ex) make upload KEY=meu
 .PHONY: upload
 upload:
-	poetry run python -m openai_setup upload
+	poetry run python -m openai_setup upload $(KEY)
 
 .PHONY: tuning
 tuning:
-	poetry run python -m openai_setup tuning
+	poetry run python -m openai_setup tuning $(KEY)
 

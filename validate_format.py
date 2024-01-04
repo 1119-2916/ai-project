@@ -12,10 +12,16 @@ openai.api_key = OPENAI_API_SECRET
 # fine_tuning_data_path = "./train_data/train_data.jsonl"
 
 # twitter から取ってきたデータセットの確認
-fine_tuning_data_path = "./train_data/twitter_11192916.jsonl"
+# fine_tuning_data_path = "./train_data/twitter_11192916.jsonl"
+
+# WEB から取ってきたデータセットの確認
+fine_tuning_data_path = "./train_data/marika_meu_conversation.jsonl"
+
+# デバッグ用
+# fine_tuning_data_path = "./sample.jsonl"
 
 with open(fine_tuning_data_path, "rt", encoding="utf-8") as f:
-    dataset = [json.loads(line.replace("\\", "\\\\")) for line in f]
+    dataset = [json.loads(line.replace("\n", "")) for line in f]
 
 print("Num examples:", len(dataset))
 print("First example:")
