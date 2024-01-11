@@ -2,20 +2,14 @@ import openai
 import json
 import tiktoken
 import numpy as np
-from private.secrets import OPENAI_API_SECRET
+from private.secrets import OPENAI_API_SECRET, TRAIN_DATA_FILE_PATH
 from collections import defaultdict
 
 
 openai.api_key = OPENAI_API_SECRET
 
-# discord から取ってきたデータセットの確認
-# fine_tuning_data_path = "./train_data/train_data.jsonl"
-
-# twitter から取ってきたデータセットの確認
-# fine_tuning_data_path = "./train_data/twitter_11192916.jsonl"
-
-# WEB から取ってきたデータセットの確認
-fine_tuning_data_path = "./train_data/marika_meu_conversation.jsonl"
+# 確認したいデータセットのパスを指定する
+fine_tuning_data_path = TRAIN_DATA_FILE_PATH["shapa"]
 
 # デバッグ用
 # fine_tuning_data_path = "./sample.jsonl"

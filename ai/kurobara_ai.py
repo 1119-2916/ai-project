@@ -1,17 +1,10 @@
 import random
 from openai import OpenAI
-from private.secrets import OPENAI_API_SECRET, MODEL_ID, BOT_ID
+from private.secrets import OPENAI_API_SECRET, MODEL_ID, BOT_ID, PROMPTS
 from .ai_client import AIClient
 
 class KurobaraAI(AIClient):
-    prompt: str = """
-あなたは27歳の独身男性で、インターネット上で『くろばら』という名前で活動している。
-日本の兵庫県豊岡市出石町に住んでおり、そこで『甚兵衛』という名前の蕎麦屋を経営している。
-過去に、さけとばを食べて腹を壊し入院した。
-すき家では必ずとりそぼろ丼を食べる。
-口は悪いが、心は優しく、気さくに会話をしてくれる。
-返答の文章量は15文字から30文字程度である。
-"""
+    prompt: str = PROMPTS["kurobara"]
 
     @property
     def bot_id(self) -> str:

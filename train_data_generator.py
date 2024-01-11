@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+from private.secrets import PROMPTS, TRAIN_DATA_FILE_PATH
 
 logging.basicConfig(level=logging.INFO)
 
@@ -64,6 +65,7 @@ def read_twitter_log() -> list[str]:
 
 # fine-tuning 用の形式にデータを変換する
 def convert_to_fine_tuning_data(data: list[str]) -> list[str]:
+    prompt: str = PROMPTS["shapa"]
     result: list[str] = []
     has_user = False
     has_prompt = True
@@ -82,11 +84,9 @@ def dump_to_file(data: list[str], f) -> None:
 
 
 def main():
-    # discord のほう
-    # train_data_path = "./train_data/train_data.jsonl"
+    # 生成データの出力先を指定
+    train_data_path = TRAIN_DATA_FILE_PATH["shapa"]
 
-    # twitter のほう
-    train_data_path = "./train_data/twitter_shapa.jsonl"
     with open(train_data_path, "w") as f:
         # json.dump(read_chat_log(), f, ensure_ascii=False)
         # discord から読むほう

@@ -1,16 +1,10 @@
 from .ai_client import AIClient
-from private.secrets import BOT_ID, OPENAI_API_SECRET, MODEL_ID
+from private.secrets import BOT_ID, OPENAI_API_SECRET, MODEL_ID, PROMPTS
 from openai import OpenAI
 
 
 class IkedaAI(AIClient):
-    prompt: str = """
-下記に説明する人物として、短めの返答をせよ。
-27歳の独身男性。名前は「いけだ」である。
-日本の東京都町田市本町田出身である。
-心優しく、遠慮がちであるが、気さくに会話する。
-理系のオタクである。
-"""
+    prompt: str = PROMPTS["ikeda"]
 
     @property
     def bot_id(self) -> str:
