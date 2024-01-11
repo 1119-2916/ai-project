@@ -21,7 +21,7 @@ https://openai.com/blog/gpt-3-5-turbo-fine-tuning-and-api-updates
 |[kurobara](https://github.com/1119-2916/ai-project?tab=readme-ov-file#kurobara)|✖|✖|〇|1046| 3 | 78,384 | 1.7354 |
 |[ikeda](https://github.com/1119-2916/ai-project?tab=readme-ov-file#ikeda)|✖|✖|〇|47823| 1 | 1,740,019 | 2.0195 |
 |[meu](https://github.com/1119-2916/ai-project?tab=readme-ov-file#meu)|✖|〇|〇|159| 3 | 72,792 | 1.7384 |
-|[shapa](https://github.com/1119-2916/ai-project?tab=readme-ov-file#shapa)|〇|✖|〇|1488| 3 | ? | ? |
+|[shapa](https://github.com/1119-2916/ai-project?tab=readme-ov-file#shapa)|〇|✖|〇|1488| 3 | 1,303,962 | 2.1201 |
 
 ### kurobara
 
