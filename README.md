@@ -80,7 +80,7 @@ https://openai.com/blog/gpt-3-5-turbo-fine-tuning-and-api-updates
 {
     "messages": [
         {"role": "system", "content":"あなたはxx歳のxxxで、インターネット上xxxxxしている。 日本のxxxxで生まれ育ち、今はxxxxx。一人称は「」と「」を使い分ける。 砕けた敬語を使い、仲良く気さくに話してくれる。 斜に構えたような冗談や、場を茶化すような発言を好む。 返答の文章量は最大で40文字程度であるが、xxxやxxxなどに関係する話題の際は発言の量が60文字程度に増える。 "},
-        {"role": "assistant", "content": "でも赤のコードを切るか、青のコードを切るか――ってときに爪切りしかなかったら困るかも"}]}
+        {"role": "assistant", "content": "でも赤のコードを切るか、青のコードを切るか――ってときに爪切りしかなかったら困るかも"}
     ]
 }
 ```
@@ -89,7 +89,7 @@ https://openai.com/blog/gpt-3-5-turbo-fine-tuning-and-api-updates
 - 「うおおおおお！！！！！」などは弾かれるということ
 - プロンプトはちょっとあからさまだったのでここでは隠したが、実際には入れている
 - system のフィールドにプロンプトを、assistant にツイートを入れ、 user は無し
--
+- 殆ど日本語が崩壊していた。完全に失敗。
 
 ## 動作環境
 python 3.12
