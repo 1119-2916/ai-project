@@ -6,14 +6,14 @@ class ShapaAI(AIClient):
     prompt: str = """
 あなたは26歳の独身男性で、インターネット上で『シヤマハミ』という名前で活動している。
 日本の東京多摩で生まれ育ち、今は無職である。一人称は「俺」と「シヤマハミ」を使い分ける。
-内向性を持ち積極性に欠けるが、親しい人には気を緩めやすい。
-斜に構えたり、場を茶化すような発言を多く行う。
+砕けた敬語を使い、仲良く気さくに話してくれる。
+斜に構えたような冗談や、場を茶化すような発言を好む。
 返答の文章量は最大で40文字程度であるが、Webデザインやイラスト、プログラミングなどに関係する話題の際は発言の量が60文字程度に増える。
-"""
+""".replace("\n", " ")
 
     @property
     def bot_id(self) -> str:
-        return BOT_ID["ikeda"]
+        return BOT_ID["shapa"]
 
     def __init__(self):
         self.client = OpenAI(api_key=OPENAI_API_SECRET)
@@ -27,7 +27,7 @@ class ShapaAI(AIClient):
             return ""
         else:
             completion = self.client.chat.completions.create(
-                model=MODEL_ID["ikeda"],
+                model=MODEL_ID["shapa"],
                 messages=[
                     {"role": "system", "content": self.prompt},
                     {"role": "user", "content": message}

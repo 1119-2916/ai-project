@@ -2,6 +2,7 @@ from .ai_client import AIClient
 from private.secrets import BOT_ID, OPENAI_API_SECRET, MODEL_ID
 from openai import OpenAI
 
+
 class IkedaAI(AIClient):
     prompt: str = """
 下記に説明する人物として、短めの返答をせよ。

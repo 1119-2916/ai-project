@@ -65,12 +65,15 @@ def read_twitter_log() -> list[str]:
 # fine-tuning 用の形式にデータを変換する
 def convert_to_fine_tuning_data(data: list[str]) -> list[str]:
     result: list[str] = []
-    no_user = True
+    has_user = False
+    has_prompt = True
     for i in data:
-        if no_user:
-            result.append('{"messages": [{"role": "assistant", "content": "' + i + '"}]}')
-        else:
+        if not has_user and has_prompt:
+            result.append('{"messages": [{"role": "system", "content":"' + prompt + '"}, {"role": "assistant", "content": "' + i + '"}]}')
+        elif has_user and not has_prompt:
             result.append('{"messages": [{"role": "user", "content": ""}, {"role": "assistant", "content": "' + i + '"}]}')
+        elif not has_user and not has_prompt:
+            result.append('{"messages": [{"role": "assistant", "content": "' + i + '"}]}')
     return result
 
 
@@ -83,7 +86,7 @@ def main():
     # train_data_path = "./train_data/train_data.jsonl"
 
     # twitter のほう
-    train_data_path = "./train_data/twitter_11192916.jsonl"
+    train_data_path = "./train_data/twitter_shapa.jsonl"
     with open(train_data_path, "w") as f:
         # json.dump(read_chat_log(), f, ensure_ascii=False)
         # discord から読むほう
