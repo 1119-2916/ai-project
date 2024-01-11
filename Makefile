@@ -19,6 +19,10 @@ run_kurobara:
 run_ikeda:
 	poetry run python -m discord_bot ikeda
 
+.PHONY: run_shapa
+run_shapa:
+	poetry run python -m discord_bot shapa
+
 .PHONY: generate_dataset
 generate_dataset:
 	poetry run python -m train_data_generator

@@ -35,11 +35,20 @@ def is_retweet(text: str) -> bool:
 
 
 # path で与えられたファイルを開き、ツイートを収拾する
-def extract_from_tweets_js(path: str) -> list[str]:
+# めちゃくちゃ適当に特定の年以降のものだけ抽出するように実装した
+def extract_from_tweets_js(path: str, time: int) -> list[str]:
     results = []
+    target: bool = False
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
-            if "full_text" in line and not has_urls(line) and not is_retweet(line):
+            if "created_at" in line:
+                inner_target = False
+                for year in range(time, 2025):
+                    if str(year) in line:
+                        inner_target = True
+                        break
+                target = inner_target
+            if target and "full_text" in line and not has_urls(line) and not is_retweet(line):
                 tweet_text = cleanse(line)
                 if (not '@' in tweet_text) and len(tweet_text) > 12:
                     results.append(tweet_text)
@@ -47,7 +56,7 @@ def extract_from_tweets_js(path: str) -> list[str]:
 
 
 def main():
-    results = extract_from_tweets_js("data/tweets.js")
+    results = extract_from_tweets_js("shapa/tweets.js", 2022)
     with open("output.txt", "w", encoding="utf-8") as f:
         f.writelines(results)
 
