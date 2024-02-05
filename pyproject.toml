@@ -13,6 +13,8 @@ openai = "^1.6.1"
 tiktoken = "^0.5.2"
 numpy = "^1.26.2"
 urlextract = "^1.8.0"
+requests = "^2.31.0"
+bs4 = "^0.0.1"
 
 
 [build-system]

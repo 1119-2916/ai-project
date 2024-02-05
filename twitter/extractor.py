@@ -1,5 +1,6 @@
 # twitter から DL してきた過去のツイート (tweets.js) から、ツイートのみを抽出し1行ずつ output.txt に出力する
 import re
+import sys
 
 
 is_reply = re.compile(r'"@[0-9a-zA-Z_]+\s')
@@ -50,13 +51,18 @@ def extract_from_tweets_js(path: str, time: int) -> list[str]:
                 target = inner_target
             if target and "full_text" in line and not has_urls(line) and not is_retweet(line):
                 tweet_text = cleanse(line)
-                if (not '@' in tweet_text) and len(tweet_text) > 12:
+                if '@' in line and (not '@' in tweet_text) and len(tweet_text) > 1:
                     results.append(tweet_text)
     return results
 
 
 def main():
-    results = extract_from_tweets_js("shapa/tweets.js", 2022)
+    if len(sys.argv) <= 1:
+        print("no argument. you must specify input file path.")
+        return
+
+    input_path = sys.argv[1]
+    results = extract_from_tweets_js(input_path, 2022)
     with open("output.txt", "w", encoding="utf-8") as f:
         f.writelines(results)
 

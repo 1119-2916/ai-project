@@ -12,7 +12,7 @@ def upload_training_data(key:str):
 
 
 def create_fine_tuning_job(key:str):
-    file_id = TRAIN_DATA_FILE_ID[key]
+    file_id:str = TRAIN_DATA_FILE_ID[key]
     client.fine_tuning.jobs.create(
         training_file=file_id,
         model="gpt-3.5-turbo"

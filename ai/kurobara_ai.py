@@ -1,4 +1,5 @@
 import random
+import time
 from openai import OpenAI
 from private.secrets import OPENAI_API_SECRET, MODEL_ID, BOT_ID, PROMPTS
 from .ai_client import AIClient
@@ -12,6 +13,23 @@ class KurobaraAI(AIClient):
 
     def __init__(self):
         self.client = OpenAI(api_key=OPENAI_API_SECRET)
+        self.history = []
+
+
+    def _get_history(self) -> str:
+        ret = ""
+        now = time.time()
+        for m, t in self.history:
+            if now - t < 60 * 5:
+                ret += m
+        return ret
+
+
+    def _push_history(self, question: str, response: str, threshold: int = 3):
+        message = f"user:{question}\n assistant:{response}\n"
+        self.history.append((message, time.time()))
+        while len(self.history) > threshold:
+            self.history.pop(0)
 
 
     # 二重リストからランダムに文字列を生成する
@@ -27,14 +45,20 @@ class KurobaraAI(AIClient):
         elif len(message) < 4:
             return ""
         else:
+            history = self._get_history()
+            if history != "":
+                history = "以下の会話に続くように返答せよ\n" + history
+            print(self.prompt + history)
             completion = self.client.chat.completions.create(
                 model=MODEL_ID["kurobara"],
                 messages=[
-                    {"role": "system", "content": self.prompt},
+                    {"role": "system", "content": self.prompt + history},
                     {"role": "user", "content": message}
                 ]
             )
-            return completion.choices[0].message.content
+            response = completion.choices[0].message.content
+            self._push_history(message, response)
+            return response
 
     # メッセージが長すぎる場合は、ルールベースで返事をする
     def generate_reply_to_longer_message(self, message: str) -> str:

@@ -85,7 +85,7 @@ def dump_to_file(data: list[str], f) -> None:
 
 def main():
     # 生成データの出力先を指定
-    train_data_path = TRAIN_DATA_FILE_PATH["shapa"]
+    train_data_path = TRAIN_DATA_FILE_PATH["shapa_short"]
 
     with open(train_data_path, "w") as f:
         # json.dump(read_chat_log(), f, ensure_ascii=False)
