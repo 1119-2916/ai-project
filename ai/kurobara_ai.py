@@ -26,7 +26,7 @@ class KurobaraAI(AIClient):
 
 
     def _push_history(self, question: str, response: str, threshold: int = 3):
-        message = f"user:{question}\n assistant:{response}\n"
+        message = f"user:{question}\nassistant: {response}\n"
         self.history.append((message, time.time()))
         while len(self.history) > threshold:
             self.history.pop(0)
@@ -47,7 +47,7 @@ class KurobaraAI(AIClient):
         else:
             history = self._get_history()
             if history != "":
-                history = "以下の会話に続くように返答せよ\n" + history
+                history = "過去には以下のような会話をしています。\n" + history
             print(self.prompt + history)
             completion = self.client.chat.completions.create(
                 model=MODEL_ID["kurobara"],
