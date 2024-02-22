@@ -39,7 +39,7 @@ class KurobaraAI(AIClient):
     def generate_reply(self, message: str) -> str:
         if len(message) > 300:
             return self.generate_reply_to_longer_message(message)
-        elif len(message) < 4:
+        elif len(message) < 1:
             return ""
         else:
             history = self._get_history()
