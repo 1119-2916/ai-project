@@ -15,7 +15,6 @@ class KurobaraAI(AIClient):
         self.client = OpenAI(api_key=OPENAI_API_SECRET)
         self.history = []
 
-
     def _get_history(self) -> str:
         ret = ""
         now = time.time()
@@ -24,13 +23,11 @@ class KurobaraAI(AIClient):
                 ret += m
         return ret
 
-
     def _push_history(self, question: str, response: str, threshold: int = 3):
         message = f"user:{question}\nassistant: {response}\n"
         self.history.append((message, time.time()))
         while len(self.history) > threshold:
             self.history.pop(0)
-
 
     # 二重リストからランダムに文字列を生成する
     def _random_selector(self, pattern: list[list[str]]) -> str:
@@ -40,7 +37,7 @@ class KurobaraAI(AIClient):
         return ret
 
     def generate_reply(self, message: str) -> str:
-        if len(message) > 100:
+        if len(message) > 300:
             return self.generate_reply_to_longer_message(message)
         elif len(message) < 4:
             return ""
